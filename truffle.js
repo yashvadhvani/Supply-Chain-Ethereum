@@ -1,3 +1,9 @@
+const HDWalletProvider = require('truffle-hdwallet-provider');
+const infuraKey = "436d2d819e1e421289e533b178ba20cd";
+//
+const fs = require('fs');
+const mnemonic = fs.readFileSync(".secret").toString().trim();
+
 module.exports = {
   networks: {
     development: {
@@ -5,8 +11,17 @@ module.exports = {
       port: 7545,
       network_id: "*",
       gasPrice:"1",
-    }
+    },
+    rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      network_id: 4,       // Ropsten's id
+      gas: 8000000,        // Ropsten has a lower block limit than mainnet
+      timeoutBlocks: 400,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: false,  // Skip dry run before migrations? (default: false for public nets )
+      networkCheckTimeout: 100000
+    },
   },
+
   plugins: ["solidity-coverage"],
   compilers: {
     solc: {
